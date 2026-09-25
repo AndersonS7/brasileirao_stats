@@ -1,6 +1,7 @@
 {
   "name": "brasileirao-stats",
   "private": true,
+  "author": "cardeiro-studio",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

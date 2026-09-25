@@ -3,16 +3,16 @@
 > Slug: `clubs-fixtures`
 > Spec: `spec.md` (same folder)
 > Plan: `plan.md` (same folder)
-> Status: Approved
+> Status: Complete
 > Last updated: 2026-09-24
 
 ## Progress
 
 | Block | Name | Status |
 |---|---|---|
-| 1 | Club page, Resumo, Jogos | Not started |
-| 2 | Estatísticas, Elenco | Not started |
-| 3 | Fixtures page | Not started |
+| 1 | Club page, Resumo, Jogos | Complete |
+| 2 | Estatísticas, Elenco | Complete |
+| 3 | Fixtures page | Complete |
 
 ## Block 1 — Club page, Resumo, Jogos
 

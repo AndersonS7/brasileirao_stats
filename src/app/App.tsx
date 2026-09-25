@@ -2,10 +2,13 @@ import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Skeleton } from '../components/ui/Skeleton'
 import { Layout } from './Layout'
-import { Stub } from './Stub'
 
 const NotFound = lazy(() => import('./NotFound'))
+const ClubPage = lazy(() => import('../features/club/ClubPage'))
+const FixturesPage = lazy(() => import('../features/fixtures/FixturesPage'))
 const LeaguePage = lazy(() => import('../features/league/LeaguePage'))
+const PlayersPage = lazy(() => import('../features/players/PlayersPage'))
+const ComparePage = lazy(() => import('../features/compare/ComparePage'))
 
 function PageSkeleton() {
   return (
@@ -24,10 +27,10 @@ export function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<LeaguePage />} />
-          <Route path="jogos" element={<Stub title="Jogos" />} />
-          <Route path="clubes/:slug" element={<Stub title="Clube" />} />
-          <Route path="jogadores" element={<Stub title="Jogadores" />} />
-          <Route path="comparar" element={<Stub title="Comparar" />} />
+          <Route path="jogos" element={<FixturesPage />} />
+          <Route path="clubes/:slug" element={<ClubPage />} />
+          <Route path="jogadores" element={<PlayersPage />} />
+          <Route path="comparar" element={<ComparePage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

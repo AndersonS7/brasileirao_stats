@@ -3,15 +3,15 @@
 > Slug: `players-compare`
 > Spec: `spec.md` (same folder)
 > Plan: `plan.md` (same folder)
-> Status: Approved
+> Status: Complete
 > Last updated: 2026-09-24
 
 ## Progress
 
 | Block | Name | Status |
 |---|---|---|
-| 1 | Rankings | Not started |
-| 2 | Comparator | Not started |
+| 1 | Rankings | Complete |
+| 2 | Comparator | Complete |
 
 ## Block 1 — Rankings
 

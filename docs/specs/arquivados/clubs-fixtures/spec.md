@@ -34,17 +34,17 @@ Club pages are the depth of the product; the fixtures page lets fans browse resu
 
 ## Acceptance criteria
 
-- [ ] Given a valid club URL, when it loads, then the header shows the club name, stadium, and badge, and Resumo is the active tab.
-- [ ] Given the club has 38 finished matches, when opening Jogos, then 38 rows appear ordered by date, each with a V, E, or D chip matching its score.
-- [ ] Given a tab is opened, when the page is refreshed, then the same tab is active.
-- [ ] Given Estatísticas, when it renders, then home and away records sum to the club's total wins, draws, losses.
-- [ ] Given a `null` statistic, when rendered, then the text "Dados indisponíveis" appears and no "0" stands in its place.
-- [ ] Given no squad data, when opening Elenco, then an empty state with a message appears and other tabs still work.
-- [ ] Given an unknown club slug, when it loads, then the not-found page renders inside the shell.
-- [ ] Given `/jogos`, when it loads, then the latest finished round is shown; when pressing next on the last round, then the button is disabled.
-- [ ] Given a round, when the selector changes to round 1, then exactly the matches of round 1 show.
-- [ ] Given a 390px viewport, when a club page renders, then no horizontal page scroll appears and tabs scroll inside their own row.
-- [ ] Given a keyboard user, when focused on the tab list, then arrow keys move between tabs.
+- [x] Given a valid club URL, when it loads, then the header shows the club name, stadium, and badge, and Resumo is the active tab. — verified 2026-09-24 via Playwright at 1440px and 390px on /clubes/bahia: h1 Bahia, Arena Fonte Nova in header, active tab Resumo
+- [x] Given the club has 38 finished matches, when opening Jogos, then 38 rows appear ordered by date, each with a V, E, or D chip matching its score. — verified 2026-09-24 via Playwright: Bahia Jogos shows 38 rows, 38 chips, 0 chip/score mismatches
+- [x] Given a tab is opened, when the page is refreshed, then the same tab is active. — verified 2026-09-24 via Playwright: ?aba=jogos, reload, Jogos still active
+- [x] Given Estatísticas, when it renders, then home and away records sum to the club's total wins, draws, losses. — verified 2026-09-24 via Playwright at 1440px and 390px on Bahia: home+away W/D/L = 15/8/15 = standings
+- [x] Given a `null` statistic, when rendered, then the text "Dados indisponíveis" appears and no "0" stands in its place. — verified 2026-09-24 via Playwright with temporary null cleanSheet.home: tile shows "Dados indisponíveis" (data restored)
+- [x] Given no squad data, when opening Elenco, then an empty state with a message appears and other tabs still work. — verified 2026-09-24 via Playwright with temporarily empty squad: empty state shown, Jogos tab still lists 38 rows (data restored)
+- [x] Given an unknown club slug, when it loads, then the not-found page renders inside the shell. — verified 2026-09-24 via Playwright: /clubes/nao-existe renders Página não encontrada with nav
+- [x] Given `/jogos`, when it loads, then the latest finished round is shown; when pressing next on the last round, then the button is disabled. — verified 2026-09-24 via Playwright: default Rodada 38 (latestRound 38), Próxima disabled
+- [x] Given a round, when the selector changes to round 1, then exactly the matches of round 1 show. — verified 2026-09-24 via Playwright: select 1 shows 10 rows = fixtures with round 1
+- [x] Given a 390px viewport, when a club page renders, then no horizontal page scroll appears and tabs scroll inside their own row. — verified 2026-09-24 via Playwright at 390px: scrollWidth <= innerWidth on Resumo and Jogos; tablist has own overflow-x-auto
+- [x] Given a keyboard user, when focused on the tab list, then arrow keys move between tabs. — verified 2026-09-24 via Playwright: ArrowLeft/ArrowRight move Resumo/Jogos
 
 ## Edge cases
 
