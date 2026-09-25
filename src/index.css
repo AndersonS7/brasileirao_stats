@@ -1,0 +1,55 @@
+@import '@fontsource-variable/figtree';
+@import 'tailwindcss';
+
+@theme {
+  --color-green-50: #edf6f0;
+  --color-green-100: #d3eadb;
+  --color-green-200: #a9d5b9;
+  --color-green-500: #1f9a55;
+  --color-green-600: #0f8046;
+  --color-green-700: #0b6b39;
+  --color-green-800: #085530;
+  --color-green-900: #063d22;
+
+  --color-ink: #14201a;
+  --color-ink-2: #44524b;
+  --color-muted: #65726b;
+  --color-line: #e1e7e3;
+  --color-line-strong: #c9d2cd;
+  --color-surface: #f5f8f6;
+
+  --color-draw: #8a6a0b;
+  --color-draw-bg: #fbf1cf;
+  --color-loss: #b42b2b;
+  --color-loss-bg: #fbe4e4;
+  --color-sula: #0e7c86;
+  --color-sula-bg: #ddf1f3;
+
+  --font-sans: 'Figtree Variable', sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@layer base {
+  body {
+    @apply bg-white font-sans text-base text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-green-700);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+  }
+}

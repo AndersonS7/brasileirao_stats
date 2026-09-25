@@ -1,0 +1,103 @@
+{
+ "palmeiras": {
+  "name": "Palmeiras",
+  "id": "134465",
+  "stadium": "Nubank Parque",
+  "color": "#006437",
+  "formed": "1914",
+  "location": "São Paulo",
+  "badge": "teams/palmeiras.png",
+  "banner": "banners/palmeiras.jpg",
+  "venueThumb": "venues/palmeiras.jpg",
+  "capacity": "43713"
+ },
+ "flamengo": {
+  "name": "Flamengo",
+  "id": "134287",
+  "stadium": "Estádio do Maracanã",
+  "color": "#000000",
+  "formed": "1895",
+  "location": "Rio de Janeiro, Brazil",
+  "badge": "teams/flamengo.png",
+  "banner": "banners/flamengo.jpg",
+  "venueThumb": "venues/flamengo.jpg",
+  "capacity": "73139"
+ },
+ "athletico": {
+  "name": "Athletico Paranaense",
+  "id": "134297",
+  "stadium": "Arena da Baixada",
+  "color": "#CE181E",
+  "formed": "1924",
+  "location": "Curitiba",
+  "badge": "teams/athletico.png",
+  "banner": "banners/athletico.jpg",
+  "venueThumb": "venues/athletico.jpg",
+  "capacity": "42372"
+ },
+ "fluminense": {
+  "name": "Fluminense",
+  "id": "134296",
+  "stadium": "Estádio do Maracanã",
+  "color": "#910029",
+  "formed": "1902",
+  "location": "Rio de Janeiro",
+  "badge": "teams/fluminense.png",
+  "banner": "banners/fluminense.jpg",
+  "venueThumb": "venues/fluminense.jpg",
+  "capacity": "73139"
+ },
+ "bragantino": {
+  "name": "Bragantino",
+  "id": "134736",
+  "stadium": "Estadio Cicero de Souza Marques",
+  "color": "#DD013F",
+  "formed": "2019",
+  "location": "Bragança Paulista, São Paulo",
+  "badge": "teams/bragantino.png",
+  "banner": "banners/bragantino.jpg",
+  "venueThumb": "venues/bragantino.jpg",
+  "capacity": "12000"
+ },
+ "cruzeiro": {
+  "name": "Cruzeiro",
+  "id": "134294",
+  "stadium": "Estádio Mineirão",
+  "color": "#2F529E",
+  "formed": "1921",
+  "location": "Belo Horizonte",
+  "badge": "teams/cruzeiro.png",
+  "banner": "banners/cruzeiro.jpg",
+  "venueThumb": "venues/cruzeiro.jpg",
+  "capacity": "66658"
+ },
+ "botafogo": {
+  "name": "Botafogo",
+  "id": "134285",
+  "stadium": "Estádio Olímpico Nilton Santos",
+  "color": "#000000",
+  "formed": "1894",
+  "location": "Rio de Janeiro, RJ",
+  "badge": "teams/botafogo.png",
+  "banner": "banners/botafogo.jpg",
+  "venueThumb": "venues/botafogo.jpg",
+  "capacity": "45217"
+ },
+ "corinthians": {
+  "name": "Corinthians",
+  "id": "134284",
+  "stadium": "Neo Química Arena",
+  "color": "#010101",
+  "formed": "1910",
+  "location": "São Paulo, Brazil",
+  "badge": "teams/corinthians.png",
+  "banner": "banners/corinthians.jpg",
+  "venueThumb": "venues/corinthians.jpg",
+  "capacity": "47252"
+ },
+ "player-gabigol": {
+  "name": "Gabriel Barbosa",
+  "team": "Santos",
+  "file": "players/gabigol.png"
+ }
+}

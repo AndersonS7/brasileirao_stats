@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design system — Brasileirão Stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* color */
+  --green-50:#EDF6F0; --green-100:#D3EADB; --green-200:#A9D5B9; --green-500:#1F9A55; --green-600:#0F8046; --green-700:#0B6B39; --green-800:#085530; --green-900:#063D22;
+  --ink:#14201A; --ink-2:#44524B; --muted:#65726B; --line:#E1E7E3; --line-strong:#C9D2CD; --surface:#F5F8F6; --bg:#FFFFFF;
+  --win:var(--green-700); --draw:#8A6A0B; --draw-bg:#FBF1CF; --loss:#B42B2B; --loss-bg:#FBE4E4;
+  --sula:#0E7C86; --sula-bg:#DDF1F3;
+  --card-yellow:#F2B705; --card-red:#D33B3B;
+  /* type */
+  --font:"Figtree",ui-sans-serif,system-ui,sans-serif;
+  /* space (4px base) */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  /* radius */
+  --r-sm:6px; --r-md:10px; --r-pill:999px;
+  --focus:0 0 0 2px var(--bg),0 0 0 4px var(--green-700);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 var(--font);-webkit-font-smoothing:antialiased}
+h1,h2,h3,p{margin:0}
+a{color:var(--green-700)}
+:focus-visible{outline:none;box-shadow:var(--focus);border-radius:var(--r-sm)}
+.tnum{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* season notice */
+.notice{background:var(--green-50);border-bottom:1px solid var(--green-100);color:var(--green-900);font-size:14px;padding:var(--s2) var(--s4);text-align:center}
+
+/* doc shell */
+.shell{display:grid;grid-template-columns:220px minmax(0,1fr);max-width:1240px;margin:0 auto}
+.side{position:sticky;top:0;align-self:start;height:100vh;padding:var(--s5) var(--s4);border-right:1px solid var(--line);overflow:auto}
+.side .brand{display:flex;align-items:center;gap:var(--s2);font-weight:700;font-size:17px;margin-bottom:var(--s5);text-decoration:none;color:var(--ink)}
+.side nav{display:flex;flex-direction:column;gap:2px}
+.side nav a{padding:6px 10px;border-radius:var(--r-sm);color:var(--ink-2);text-decoration:none;font-size:14px}
+.side nav a:hover{background:var(--surface);color:var(--ink)}
+.side nav a[aria-current="true"]{background:var(--green-50);color:var(--green-800);font-weight:600}
+main{padding:var(--s7) var(--s6) var(--s8);min-width:0}
+section{padding-bottom:var(--s8)}
+.doc-h{font-size:28px;line-height:1.2;font-weight:700;letter-spacing:-.01em;margin-bottom:var(--s2)}
+.doc-p{color:var(--ink-2);max-width:62ch;margin-bottom:var(--s5)}
+.sub{font-size:14px;font-weight:600;color:var(--ink-2);margin:var(--s5) 0 var(--s3)}
+.panel{border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s5);background:var(--bg)}
+.row{display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center}
+.grid{display:grid;gap:var(--s4)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.note{font-size:13px;color:var(--muted)}
+
+/* hero */
+.hero{padding:var(--s7) 0 var(--s8)}
+.hero h1{font-size:clamp(34px,5vw,52px);line-height:1.08;font-weight:700;letter-spacing:-.02em;max-width:16ch}
+.hero p{color:var(--ink-2);margin-top:var(--s4);max-width:52ch;font-size:18px}
+.hero .row{margin-top:var(--s5)}
+
+/* swatches */
+.ramp{display:grid;grid-template-columns:repeat(8,1fr);border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.sw{border:0;font:inherit;cursor:pointer;padding:var(--s5) var(--s2) var(--s2);text-align:left;font-size:12px;line-height:1.3;color:var(--ink);position:relative}
+.sw b{display:block;font-size:13px}
+.sw.dark{color:#fff}
+.sw:focus-visible{z-index:1}
+.sw small{opacity:.8;font-size:11px}
+.sw .ok{position:absolute;top:6px;right:8px;font-size:11px;opacity:0;transition:opacity .15s}
+.sw.copied .ok{opacity:1}
+.chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--s3)}
+.chip{border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s3);font-size:13px;background:var(--bg);cursor:pointer;text-align:left;font-family:inherit}
+.chip i{display:block;height:28px;border-radius:var(--r-sm);margin-bottom:var(--s2);border:1px solid rgba(0,0,0,.06)}
+.chip b{display:block;font-size:13px}
+.chip span{color:var(--muted)}
+.contrast{width:100%;border-collapse:collapse;font-size:14px}
+.contrast th,.contrast td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}
+.contrast th{font-weight:600;color:var(--ink-2);font-size:13px}
+.pass{color:var(--green-700);font-weight:600}
+
+/* type */
+.tscale div{display:grid;grid-template-columns:150px 1fr;gap:var(--s4);align-items:baseline;padding:var(--s3) 0;border-bottom:1px solid var(--line)}
+.tscale div:last-child{border:0}
+.tscale small{color:var(--muted);font-size:12px}
+
+/* buttons */
+.btn{font:600 14px/1 var(--font);border-radius:var(--r-sm);padding:11px 16px;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;gap:var(--s2);text-decoration:none;transition:background .15s,border-color .15s}
+.btn-primary{background:var(--green-700);color:#fff}
+.btn-primary:hover{background:var(--green-800)}
+.btn-primary:active{background:var(--green-900)}
+.btn-outline{background:var(--bg);color:var(--ink);border-color:var(--line-strong)}
+.btn-outline:hover{background:var(--surface)}
+.btn-ghost{background:transparent;color:var(--green-800)}
+.btn-ghost:hover{background:var(--green-50)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn svg,.ico{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+
+/* search */
+.search{position:relative;max-width:420px}
+.search input{width:100%;font:400 15px var(--font);padding:11px 44px 11px 40px;border:1px solid var(--line-strong);border-radius:var(--r-pill);background:var(--bg);color:var(--ink)}
+.search input::placeholder{color:var(--muted)}
+.search input:focus{outline:none;border-color:var(--green-700);box-shadow:0 0 0 3px var(--green-100)}
+.search .ico{position:absolute;left:14px;top:50%;translate:0 -50%;color:var(--muted)}
+.search kbd{position:absolute;right:12px;top:50%;translate:0 -50%;font:500 12px var(--font);color:var(--muted);border:1px solid var(--line-strong);border-radius:4px;padding:1px 6px}
+.results{list-style:none;margin:var(--s2) 0 0;padding:var(--s1);border:1px solid var(--line);border-radius:var(--r-md);box-shadow:0 4px 16px rgba(20,32,26,.08)}
+.results li a{display:flex;align-items:center;gap:var(--s3);padding:8px 10px;border-radius:var(--r-sm);color:var(--ink);text-decoration:none}
+.results li a:hover,.results li a:focus-visible{background:var(--green-50)}
+
+/* tabs / segmented */
+.tabs{display:flex;gap:var(--s5);border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{background:none;border:0;font:500 15px var(--font);color:var(--ink-2);padding:var(--s3) 0;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--green-800);border-color:var(--green-700);font-weight:600}
+.seg{display:inline-flex;background:var(--surface);border-radius:var(--r-pill);padding:3px}
+.seg button{border:0;background:transparent;font:500 14px var(--font);color:var(--ink-2);padding:7px 16px;border-radius:var(--r-pill);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--bg);color:var(--green-800);font-weight:600;box-shadow:0 0 0 1px var(--line)}
+.tabpanel{padding:var(--s4) 0;color:var(--ink-2)}
+
+/* form badge */
+.form{display:inline-flex;gap:3px}
+.fb{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff}
+.fb.v{background:var(--win)} .fb.e{background:var(--draw-bg);color:var(--draw);box-shadow:inset 0 0 0 1px #E4CF83} .fb.d{background:var(--loss)}
+
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;padding:3px 10px;border-radius:var(--r-pill)}
+.pill.g{background:var(--green-50);color:var(--green-800)} .pill.s{background:var(--sula-bg);color:#0A5860} .pill.r{background:var(--loss-bg);color:var(--loss)} .pill.n{background:var(--surface);color:var(--ink-2)}
+.card-y,.card-r{display:inline-block;width:10px;height:14px;border-radius:2px;vertical-align:-2px}
+.card-y{background:var(--card-yellow)} .card-r{background:var(--card-red)}
+
+/* crest placeholder */
+.crest{width:24px;height:24px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:10px;font-weight:700;color:#fff;letter-spacing:.02em}
+.crest-img{width:24px;height:24px;object-fit:contain;flex:none;display:block}
+
+/* images */
+.crest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:var(--s3)}
+.crest-cell{border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s4) var(--s2) var(--s3);text-align:center;font-size:13px;color:var(--ink-2)}
+.crest-cell img{width:64px;height:64px;object-fit:contain;display:block;margin:0 auto var(--s2)}
+.photo{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;background:var(--bg)}
+.photo img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--surface)}
+.photo figcaption{padding:var(--s3) var(--s4);font-size:14px}
+.photo figcaption b{display:block;font-weight:600}
+.photo figcaption span{color:var(--ink-2);font-size:13px}
+.person{display:flex;gap:var(--s4);align-items:center;border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s4)}
+.avatar{width:72px;height:72px;border-radius:50%;background:var(--green-50);flex:none;overflow:hidden;display:grid;place-items:center;color:var(--green-800);font-weight:700}
+.avatar img{width:100%;height:100%;object-fit:cover;object-position:top}
+.person b{display:block}
+.person span{font-size:13px;color:var(--ink-2)}
+.credit{font-size:13px;color:var(--ink-2);line-height:1.5}
+.credit a{color:var(--green-800)}
+.site-foot{border-top:1px solid var(--line);padding-top:var(--s5);max-width:80ch}
+
+/* table */
+.tbl-wrap{overflow-x:auto}
+table.std{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+.std th{font-weight:600;font-size:12px;color:var(--muted);text-align:right;padding:10px 10px;border-bottom:1px solid var(--line-strong);white-space:nowrap}
+.std th:nth-child(-n+2){text-align:left}
+.std td{padding:10px;text-align:right;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.std td:nth-child(-n+2){text-align:left}
+.std td.pos{width:44px;position:relative;color:var(--ink-2)}
+.std td.pos::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:transparent}
+.std tr.z-lib td.pos::before{background:var(--green-600)} .std tr.z-sula td.pos::before{background:var(--sula)} .std tr.z-rel td.pos::before{background:var(--loss)}
+.std td.pos{padding-left:14px}
+.std td.team{font-weight:500}
+.std td.team span.t{display:flex;align-items:center;gap:var(--s3);min-width:150px}
+.std td.pts{font-weight:700}
+.std tbody tr:hover{background:var(--surface)}
+.legend{display:flex;flex-wrap:wrap;gap:var(--s4);font-size:13px;color:var(--ink-2);margin-top:var(--s3)}
+.legend i{display:inline-block;width:3px;height:14px;border-radius:2px;margin-right:6px;vertical-align:-2px}
+
+/* stat tiles */
+.tile{border:1px solid var(--line);border-radius:var(--r-md);padding:var(--s4)}
+.tile .lbl{font-size:13px;color:var(--muted)}
+.tile .val{font-size:32px;font-weight:700;letter-spacing:-.02em;line-height:1.2;margin-top:2px}
+.tile .meta{font-size:13px;color:var(--ink-2);margin-top:2px}
+
+/* compare bars (the memorable element) */
+.cmp{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.cmp-head{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:var(--s5) var(--s4);gap:var(--s4);border-bottom:1px solid var(--line)}
+.cmp-team{display:flex;align-items:center;gap:var(--s3);font-weight:600;font-size:18px}
+.cmp-team.b{justify-content:flex-end;text-align:right}
+.cmp-team .crest{width:40px;height:40px;font-size:13px}
+.vs{color:var(--muted);font-size:14px}
+.cmp-row{padding:var(--s3) var(--s4) var(--s4)}
+.cmp-row+.cmp-row{border-top:1px solid var(--line)}
+.cmp-lbl{text-align:center;font-size:13px;color:var(--ink-2);margin-bottom:6px}
+.cmp-line{display:grid;grid-template-columns:48px 1fr 1fr 48px;gap:var(--s2);align-items:center;font-variant-numeric:tabular-nums}
+.cmp-line .n{font-weight:700;font-size:15px}
+.cmp-line .n.a{text-align:left} .cmp-line .n.b{text-align:right}
+.track{height:8px;background:var(--surface);border-radius:var(--r-pill);display:flex;overflow:hidden}
+.track.a{justify-content:flex-end}
+.fill{height:100%;width:0;transition:width .9s var(--ease)}
+.play .fill{width:var(--w)}
+.fill.lead{filter:none} .fill.trail{opacity:.45}
+
+/* header */
+.club{border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.club-top{position:relative;isolation:isolate;color:#fff;padding:var(--s7) var(--s5) var(--s5);display:flex;gap:var(--s4);align-items:center;background:var(--club,#0B6B39)}
+.club-top::before{content:"";position:absolute;inset:0;z-index:-2;background:var(--photo) center/cover}
+.club-top::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,color-mix(in srgb,var(--club) 94%,#000) 30%,color-mix(in srgb,var(--club) 40%,transparent))}
+.club-top .crest-big{width:80px;height:80px;border-radius:50%;background:#fff;padding:10px;flex:none}
+.club-top .crest-big img{width:100%;height:100%;object-fit:contain;display:block}
+.club-top h3{font-size:26px;line-height:1.2;font-weight:700;letter-spacing:-.01em}
+.club-top p{opacity:.9;font-size:14px}
+.club-body{padding:0 var(--s5)}
+
+/* charts */
+.chart text{font:12px var(--font);fill:var(--muted)}
+.axis{stroke:var(--line);stroke-width:1}
+.bar{fill:var(--green-700)} .bar.alt{fill:var(--green-200)}
+
+/* states */
+.skel{background:linear-gradient(90deg,var(--surface) 25%,#EBF0ED 37%,var(--surface) 63%);background-size:400% 100%;animation:sh 1.4s ease infinite;border-radius:var(--r-sm)}
+@keyframes sh{0%{background-position:100% 0}100%{background-position:0 0}}
+.state{border:1px dashed var(--line-strong);border-radius:var(--r-md);padding:var(--s6);text-align:center}
+.state h4{margin:0 0 4px;font-size:16px}
+.state p{color:var(--ink-2);font-size:14px;margin-bottom:var(--s4)}
+.state.err{border-style:solid;border-color:#EDBDBD;background:#FFF8F8}
+
+/* space / radius demo */
+.spc{display:flex;align-items:flex-end;gap:var(--s4);flex-wrap:wrap}
+.spc div{background:var(--green-100);border-radius:2px}
+.spc figure{margin:0;text-align:center;font-size:12px;color:var(--muted)}
+.rad div{width:72px;height:72px;background:var(--green-50);border:1px solid var(--green-200)}
+
+/* responsive */
+@media(max-width:900px){
+  .shell{display:block}
+  .side{position:sticky;top:0;z-index:5;height:auto;padding:var(--s2) var(--s4);background:rgba(255,255,255,.96);border-right:0;border-bottom:1px solid var(--line);display:flex;gap:var(--s4);align-items:center;overflow-x:auto}
+  .side .brand{margin:0;white-space:nowrap}
+  .side nav{flex-direction:row}
+  .side nav a{white-space:nowrap}
+  main{padding:var(--s5) var(--s4) var(--s7)}
+  .ramp{grid-template-columns:repeat(4,1fr)}
+  .tscale div{grid-template-columns:1fr}
+  .cmp-head{grid-template-columns:1fr;text-align:center}
+  .cmp-team,.cmp-team.b{justify-content:center;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){.fill{transition:none}.skel{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></symbol>
+  <symbol id="i-compare" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16.5v.01"/></symbol>
+</svg>
+
+<div class="notice" role="note"><strong>Dados de exemplo.</strong> Neste componente, os números são fictícios. No site real, a faixa informa a temporada exibida (amostra do plano gratuito da API-Football).</div>
+
+<div class="shell">
+  <aside class="side">
+    <a class="brand" href="#topo">
+      <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="7" fill="#0B6B39"/><circle cx="13" cy="13" r="5" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M13 5v16" stroke="#fff" stroke-width="1.6"/></svg>
+      Brasileirão Stats
+    </a>
+    <nav aria-label="Seções do design system" id="nav">
+      <a href="#cores">Cores</a>
+      <a href="#tipografia">Tipografia</a>
+      <a href="#base">Espaço e forma</a>
+      <a href="#acoes">Botões e busca</a>
+      <a href="#navegacao">Abas e filtros</a>
+      <a href="#tabela">Tabela</a>
+      <a href="#indicadores">Indicadores</a>
+      <a href="#comparador">Comparador</a>
+      <a href="#clube">Cabeçalho do clube</a>
+      <a href="#imagens">Imagens e créditos</a>
+      <a href="#graficos">Gráficos</a>
+      <a href="#estados">Estados</a>
+      <a href="#tokens">Tokens</a>
+    </nav>
+  </aside>
+
+  <main id="topo">
+    <div class="hero">
+      <h1>Estatística de futebol, sem ruído.</h1>
+      <p>Design system do Brasileirão Stats. Fundo branco, texto grafite e um único verde para tudo que é ação ou destaque. Clique nos componentes: abas, filtros, busca e swatches respondem.</p>
+      <div class="row">
+        <a class="btn btn-primary" href="#tabela">Ver a tabela</a>
+        <a class="btn btn-outline" href="#comparador">Ver o comparador</a>
+      </div>
+    </div>
+
+    <!-- CORES -->
+    <section id="cores">
+      <h2 class="doc-h">Cores</h2>
+      <p class="doc-p">Verde-gramado escuro como cor de ação, cinzas com leve tom esverdeado como neutros. Âmbar e vermelho só carregam significado (empate, cartão, rebaixamento). Clique em uma cor para copiar o valor.</p>
+      <div class="sub">Verde (cor de marca)</div>
+      <div class="ramp" id="ramp"></div>
+      <div class="sub">Neutros</div>
+      <div class="chips" id="neutrals"></div>
+      <div class="sub">Significado (uso restrito)</div>
+      <div class="chips" id="semantic"></div>
+      <div class="sub">Contraste (WCAG AA exige 4.5:1 para texto)</div>
+      <div class="panel tbl-wrap">
+        <table class="contrast">
+          <thead><tr><th>Combinação</th><th>Amostra</th><th>Razão</th><th>AA</th></tr></thead>
+          <tbody id="contrast"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TIPOGRAFIA -->
+    <section id="tipografia">
+      <h2 class="doc-h">Tipografia</h2>
+      <p class="doc-p">Uma família só, Figtree: geométrica, limpa e legível em tamanhos pequenos. Números tabulares nas tabelas para as colunas alinharem. Títulos em peso 700 com espaçamento levemente fechado, corpo em 400.</p>
+      <div class="panel tscale">
+        <div><small>Display · 52/56 · 700</small><span style="font-size:52px;line-height:1.08;font-weight:700;letter-spacing:-.02em">Palmeiras lidera</span></div>
+        <div><small>Título 1 · 28/34 · 700</small><span style="font-size:28px;line-height:1.2;font-weight:700;letter-spacing:-.01em">Classificação</span></div>
+        <div><small>Título 2 · 20/28 · 600</small><span style="font-size:20px;line-height:1.4;font-weight:600">Estatísticas do clube</span></div>
+        <div><small>Corpo · 16/25 · 400</small><span>O time marcou 33 gols em 19 jogos e sofreu 14, o melhor saldo da liga.</span></div>
+        <div><small>Pequeno · 14/21 · 400</small><span style="font-size:14px">Atualizado a cada coleta de dados. Temporada exibida no topo.</span></div>
+        <div><small>Legenda · 12/16 · 500</small><span style="font-size:12px;font-weight:500;color:var(--muted)">Jogos</span></div>
+        <div><small>Número grande · 32 · 700</small><span class="tnum" style="font-size:32px;font-weight:700;letter-spacing:-.02em">1.204</span></div>
+      </div>
+    </section>
+
+    <!-- BASE -->
+    <section id="base">
+      <h2 class="doc-h">Espaço e forma</h2>
+      <p class="doc-p">Escala de 4px. Só dois raios de canto e nenhuma sombra decorativa: a hierarquia vem de bordas finas e de espaço em branco. Sombra só em menus flutuantes.</p>
+      <div class="sub">Espaçamento</div>
+      <div class="spc panel">
+        <figure><div style="width:4px;height:4px"></div>4</figure><figure><div style="width:8px;height:8px"></div>8</figure><figure><div style="width:12px;height:12px"></div>12</figure><figure><div style="width:16px;height:16px"></div>16</figure><figure><div style="width:24px;height:24px"></div>24</figure><figure><div style="width:32px;height:32px"></div>32</figure><figure><div style="width:48px;height:48px"></div>48</figure><figure><div style="width:72px;height:72px"></div>72</figure>
+      </div>
+      <div class="sub">Raio de canto</div>
+      <div class="row rad panel">
+        <figure style="margin:0;text-align:center;font-size:12px;color:var(--muted)"><div style="border-radius:6px"></div>6 · campos, botões</figure>
+        <figure style="margin:0;text-align:center;font-size:12px;color:var(--muted)"><div style="border-radius:10px"></div>10 · painéis</figure>
+        <figure style="margin:0;text-align:center;font-size:12px;color:var(--muted)"><div style="border-radius:999px"></div>pílula · busca, filtros</figure>
+      </div>
+    </section>
+
+    <!-- AÇÕES -->
+    <section id="acoes">
+      <h2 class="doc-h">Botões e busca</h2>
+      <p class="doc-p">Um botão primário por tela. Ícones Lucide, traço de 1.75px. A busca de clube abre com a tecla <kbd style="font:500 12px var(--font);border:1px solid var(--line-strong);border-radius:4px;padding:1px 6px">/</kbd>.</p>
+      <div class="panel">
+        <div class="row">
+          <button class="btn btn-primary">Comparar clubes</button>
+          <button class="btn btn-outline"><svg class="ico"><use href="#i-compare"/></svg>Trocar clube</button>
+          <button class="btn btn-ghost">Ver todos os jogos<svg class="ico"><use href="#i-arrow"/></svg></button>
+          <button class="btn btn-primary" disabled>Indisponível</button>
+        </div>
+        <div class="sub">Busca de clube</div>
+        <div class="search">
+          <svg class="ico"><use href="#i-search"/></svg>
+          <input id="q" type="search" placeholder="Buscar clube" aria-label="Buscar clube" autocomplete="off">
+          <kbd>/</kbd>
+        </div>
+        <ul class="results" id="results" hidden></ul>
+      </div>
+    </section>
+
+    <!-- NAVEGAÇÃO -->
+    <section id="navegacao">
+      <h2 class="doc-h">Abas e filtros</h2>
+      <p class="doc-p">Abas para trocar de conteúdo dentro de uma página, filtro em pílula para mudar o recorte dos mesmos dados.</p>
+      <div class="panel">
+        <div role="tablist" class="tabs" aria-label="Seções do clube" id="tabs">
+          <button role="tab" class="tab" aria-selected="true" data-p="0">Resumo</button>
+          <button role="tab" class="tab" aria-selected="false" data-p="1">Jogos</button>
+          <button role="tab" class="tab" aria-selected="false" data-p="2">Estatísticas</button>
+          <button role="tab" class="tab" aria-selected="false" data-p="3">Elenco</button>
+        </div>
+        <div class="tabpanel" id="tabpanel">Campanha, próximo jogo e destaques do clube.</div>
+        <div class="sub">Filtro</div>
+        <div class="seg" role="group" aria-label="Recorte da tabela"><button aria-pressed="true">Geral</button><button aria-pressed="false">Casa</button><button aria-pressed="false">Fora</button></div>
+      </div>
+    </section>
+
+    <!-- TABELA -->
+    <section id="tabela">
+      <h2 class="doc-h">Tabela de classificação</h2>
+      <p class="doc-p">Barra fina à esquerda marca a zona e a legenda a explica, então a cor nunca é o único sinal. Números tabulares. Em 390px, as colunas secundárias somem e o essencial fica (posição, clube, jogos, saldo, pontos).</p>
+      <div class="panel">
+        <div class="row" style="justify-content:space-between;margin-bottom:var(--s3)">
+          <div class="seg" role="group" aria-label="Recorte da tabela" id="tblseg"><button aria-pressed="true" data-m="all">Geral</button><button aria-pressed="false" data-m="home">Casa</button><button aria-pressed="false" data-m="away">Fora</button></div>
+          <span class="note">Dados de exemplo</span>
+        </div>
+        <div class="tbl-wrap">
+          <table class="std">
+            <caption class="sr">Classificação de exemplo</caption>
+            <thead><tr><th scope="col">#</th><th scope="col">Clube</th><th scope="col" title="Jogos">J</th><th scope="col" title="Vitórias" class="opt">V</th><th scope="col" title="Empates" class="opt">E</th><th scope="col" title="Derrotas" class="opt">D</th><th scope="col" title="Saldo de gols">SG</th><th scope="col" title="Pontos">Pts</th><th scope="col">Últimos 5</th></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="legend"><span><i style="background:var(--green-600)"></i>Libertadores</span><span><i style="background:var(--sula)"></i>Sul-Americana</span><span><i style="background:var(--loss)"></i>Rebaixamento</span></div>
+      </div>
+    </section>
+
+    <!-- INDICADORES -->
+    <section id="indicadores">
+      <h2 class="doc-h">Indicadores</h2>
+      <p class="doc-p">Números grandes só quando o número é a informação. Sem ícones decorativos, sem gradiente.</p>
+      <div class="grid g3">
+        <div class="tile"><div class="lbl">Melhor ataque</div><div class="val tnum">33</div><div class="meta">gols · Palmeiras</div></div>
+        <div class="tile"><div class="lbl">Melhor defesa</div><div class="val tnum">14</div><div class="meta">gols sofridos · Palmeiras</div></div>
+        <div class="tile"><div class="lbl">Média de gols por jogo</div><div class="val tnum">2,52</div><div class="meta">na temporada exibida</div></div>
+      </div>
+      <div class="sub">Forma, selos e cartões</div>
+      <div class="panel row" style="gap:var(--s5)">
+        <span class="form" aria-label="Últimos 5: vitória, vitória, vitória, empate, empate"><span class="fb v">V</span><span class="fb v">V</span><span class="fb v">V</span><span class="fb e">E</span><span class="fb e">E</span></span>
+        <span class="pill g">Libertadores</span><span class="pill s">Sul-Americana</span><span class="pill r">Rebaixamento</span><span class="pill n">Rodada 19</span>
+        <span><span class="card-y" aria-hidden="true"></span> 34 amarelos</span><span><span class="card-r" aria-hidden="true"></span> 3 vermelhos</span>
+      </div>
+    </section>
+
+    <!-- COMPARADOR -->
+    <section id="comparador">
+      <h2 class="doc-h">Comparador de clubes</h2>
+      <p class="doc-p">O elemento de destaque do produto. Barras simétricas partem do centro; o lado que lidera fica na cor cheia do clube, o outro em tom apagado. É o único movimento do site: as barras crescem ao entrar na tela ou ao clicar em Repetir.</p>
+      <div class="row" style="margin-bottom:var(--s3)"><button class="btn btn-outline" id="replay"><svg class="ico"><use href="#i-refresh"/></svg>Repetir animação</button></div>
+      <div class="cmp" id="cmp"></div>
+    </section>
+
+    <!-- CLUBE -->
+    <section id="clube">
+      <h2 class="doc-h">Cabeçalho do clube</h2>
+      <p class="doc-p">A cor oficial do clube aparece só aqui e no comparador. O resto do site continua verde. O texto sobre a cor do clube precisa passar em AA, então cores claras usam texto escuro.</p>
+      <div class="club" style="--club:#006437">
+        <div class="club-top" style="--photo:url(img/venues/palmeiras.jpg)">
+          <div class="crest-big"><img src="img/teams/palmeiras.png" alt=""></div>
+          <div><h3>Palmeiras</h3><p>Nubank Parque · São Paulo (SP) · fundado em 1914</p></div>
+        </div>
+        <div class="club-body">
+          <div class="tabs" role="tablist" aria-label="Seções do clube (exemplo)"><button class="tab" role="tab" aria-selected="true">Resumo</button><button class="tab" role="tab" aria-selected="false">Jogos</button><button class="tab" role="tab" aria-selected="false">Estatísticas</button><button class="tab" role="tab" aria-selected="false">Elenco</button></div>
+          <div class="tabpanel">Cor de exemplo do clube. Os dados reais vêm do TheSportsDB (`strColour1`).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- IMAGENS -->
+    <section id="imagens">
+      <h2 class="doc-h">Imagens e créditos</h2>
+      <p class="doc-p">Escudos, fotos de estádio e recortes de jogadores vêm do TheSportsDB. No projeto real, o script de coleta baixa os arquivos uma vez para <code>public/img/</code>, então o site não depende de link externo. Escudo sempre com texto alternativo vazio quando o nome do clube está ao lado, e com o nome quando aparece sozinho.</p>
+      <div class="sub">Escudos (fundo transparente)</div>
+      <div class="crest-grid" id="crests"></div>
+      <div class="sub">Tamanhos usados</div>
+      <div class="panel row" style="gap:var(--s6);align-items:flex-end">
+        <figure style="margin:0;text-align:center"><img class="crest-img" src="img/teams/flamengo.png" alt="Escudo do Flamengo"><figcaption class="note">24 · tabelas</figcaption></figure>
+        <figure style="margin:0;text-align:center"><img class="crest-img" style="width:40px;height:40px" src="img/teams/flamengo.png" alt="Escudo do Flamengo"><figcaption class="note">40 · comparador</figcaption></figure>
+        <figure style="margin:0;text-align:center"><img class="crest-img" style="width:80px;height:80px" src="img/teams/flamengo.png" alt="Escudo do Flamengo"><figcaption class="note">80 · cabeçalho</figcaption></figure>
+      </div>
+      <div class="sub">Foto de estádio e jogador</div>
+      <div class="grid g3">
+        <figure class="photo" style="margin:0"><img src="img/venues/cruzeiro.jpg" alt="Vista aérea do Mineirão" loading="lazy"><figcaption><b>Estádio Mineirão</b><span>Cruzeiro · Belo Horizonte · 66.658 lugares</span></figcaption></figure>
+        <figure class="photo" style="margin:0"><img src="img/venues/corinthians.jpg" alt="Neo Química Arena" loading="lazy"><figcaption><b>Neo Química Arena</b><span>Corinthians · São Paulo · 47.252 lugares</span></figcaption></figure>
+        <div>
+          <div class="person"><div class="avatar"><img src="img/players/gabigol.png" alt="Gabriel Barbosa"></div><div><b>Gabriel Barbosa</b><span>Atacante · dado de exemplo</span></div></div>
+          <div class="person" style="margin-top:var(--s3)"><div class="avatar" aria-hidden="true">JS</div><div><b>Jogador sem foto</b><span>Iniciais no lugar da imagem</span></div></div>
+        </div>
+      </div>
+      <div class="sub">Créditos (rodapé do site)</div>
+      <div class="panel credit">
+        <p><strong>Fontes.</strong> Estatísticas e jogos: <a href="https://www.api-football.com/">API-Football</a>. Escudos, fotos de estádios e jogadores, cores e descrições dos clubes: <a href="https://www.thesportsdb.com/">TheSportsDB</a>.</p>
+        <p style="margin-top:var(--s2)">Escudos e nomes são marcas dos respectivos clubes. Projeto demonstrativo, sem fins comerciais e sem vínculo com a CBF ou com os clubes.</p>
+      </div>
+    </section>
+
+    <!-- GRÁFICOS -->
+    <section id="graficos">
+      <h2 class="doc-h">Gráficos</h2>
+      <p class="doc-p">Recharts na implementação, com este estilo: eixos finos, sem grade pesada, verde para a série principal e verde claro para a comparação. Legenda direta, sem caixa.</p>
+      <div class="grid g2">
+        <div class="panel">
+          <div style="font-weight:600;margin-bottom:var(--s3)">Gols por faixa de minuto</div>
+          <svg class="chart" viewBox="0 0 320 170" role="img" aria-label="Gols marcados e sofridos por faixa de minuto, dados de exemplo" width="100%">
+            <line class="axis" x1="30" y1="140" x2="310" y2="140"/>
+            <g id="bars"></g>
+          </svg>
+          <div class="row note" style="gap:var(--s4)"><span><i style="display:inline-block;width:10px;height:10px;background:var(--green-700);border-radius:2px;margin-right:6px"></i>Marcados</span><span><i style="display:inline-block;width:10px;height:10px;background:var(--green-200);border-radius:2px;margin-right:6px"></i>Sofridos</span></div>
+        </div>
+        <div class="panel">
+          <div style="font-weight:600;margin-bottom:var(--s3)">Pontos acumulados por rodada</div>
+          <svg class="chart" viewBox="0 0 320 170" role="img" aria-label="Pontos acumulados ao longo das rodadas, dados de exemplo" width="100%">
+            <line class="axis" x1="30" y1="140" x2="310" y2="140"/><line class="axis" x1="30" y1="90" x2="310" y2="90"/><line class="axis" x1="30" y1="40" x2="310" y2="40"/>
+            <text x="4" y="144">0</text><text x="4" y="94">25</text><text x="4" y="44">50</text>
+            <polyline fill="none" stroke="#0B6B39" stroke-width="2.5" stroke-linejoin="round" points="30,140 60,128 90,116 120,104 150,92 180,80 210,68 240,60 270,52 300,44"/>
+            <polyline fill="none" stroke="#A9D5B9" stroke-width="2.5" stroke-linejoin="round" points="30,140 60,132 90,122 120,112 150,104 180,96 210,86 240,76 270,66 300,58"/>
+            <circle cx="300" cy="44" r="4" fill="#0B6B39"/>
+            <text x="250" y="34">Palmeiras</text><text x="250" y="76" style="fill:#65726B">Flamengo</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- ESTADOS -->
+    <section id="estados">
+      <h2 class="doc-h">Estados</h2>
+      <p class="doc-p">Todo bloco de dados tem carregamento, vazio e erro. Mensagens dizem o que houve e o que fazer, sem pedir desculpa.</p>
+      <div class="grid g3">
+        <div class="panel" aria-busy="true"><div class="note" style="margin-bottom:var(--s3)">Carregando</div>
+          <div class="skel" style="height:14px;width:60%;margin-bottom:10px"></div><div class="skel" style="height:14px;margin-bottom:10px"></div><div class="skel" style="height:14px;width:80%"></div></div>
+        <div class="state"><h4>Nenhum clube encontrado</h4><p>Confira a grafia ou busque pelo nome do estádio.</p><button class="btn btn-outline" onclick="document.getElementById('q').focus();document.getElementById('acoes').scrollIntoView()">Limpar busca</button></div>
+        <div class="state err" role="alert"><svg class="ico" style="color:var(--loss);width:24px;height:24px;margin-bottom:6px"><use href="#i-alert"/></svg><h4>Estatísticas indisponíveis</h4><p>Este clube não tem dados de estatística na temporada exibida.</p><button class="btn btn-outline">Voltar à tabela</button></div>
+      </div>
+      <div class="sub">Foco por teclado</div>
+      <div class="panel row"><span class="note">Pressione Tab para ver o anel de foco:</span><button class="btn btn-outline">Botão</button><a class="btn btn-ghost" href="#estados">Link</a></div>
+    </section>
+
+    <!-- TOKENS -->
+    <section id="tokens">
+      <h2 class="doc-h">Tokens para o Tailwind</h2>
+      <p class="doc-p">Estes valores viram <code>@theme</code> no <code>index.css</code> do projeto.</p>
+      <pre class="panel" style="overflow:auto;font-size:13px;line-height:1.6;margin:0" id="tokcode"></pre>
+      <div class="row" style="margin-top:var(--s3)"><button class="btn btn-outline" id="copytok">Copiar tokens</button><span class="note" id="copystate" role="status"></span></div>
+    </section>
+
+    <footer class="site-foot credit">
+      <p><strong>Fontes.</strong> Estatísticas e jogos: <a href="https://www.api-football.com/">API-Football</a>. Imagens e dados dos clubes: <a href="https://www.thesportsdb.com/">TheSportsDB</a>. Escudos são marcas dos respectivos clubes. Projeto demonstrativo, sem fins comerciais.</p>
+    </footer>
+  </main>
+</div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const lum=h=>{const c=h.replace('#','').match(/../g).map(x=>parseInt(x,16)/255).map(v=>v<=.03928?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]};
+const ratio=(a,b)=>{const [x,y]=[lum(a),lum(b)].sort((p,q)=>q-p);return (x+.05)/(y+.05)};
+
+/* swatches */
+const greens=[['50','#EDF6F0'],['100','#D3EADB'],['200','#A9D5B9'],['500','#1F9A55'],['600','#0F8046'],['700','#0B6B39'],['800','#085530'],['900','#063D22']];
+const ramp=$('#ramp');
+greens.forEach(([n,h])=>{const b=document.createElement('button');b.className='sw'+(lum(h)<.25?' dark':'');b.style.background=h;b.innerHTML=`<span class="ok">copiado</span><b>${n}</b><small>${h}</small>${n==='700'?'<small><br>ação</small>':''}`;b.onclick=()=>copy(h,b);ramp.append(b)});
+const chip=(box,[n,h,use])=>{const b=document.createElement('button');b.className='chip';b.innerHTML=`<i style="background:${h}"></i><b>${n}</b><span>${h} · ${use}</span>`;b.onclick=()=>copy(h);box.append(b)};
+[['ink','#14201A','texto'],['ink-2','#44524B','texto secundário'],['muted','#65726B','legendas'],['line','#E1E7E3','bordas'],['surface','#F5F8F6','fundo suave'],['bg','#FFFFFF','fundo']].forEach(x=>chip($('#neutrals'),x));
+[['vitória','#0B6B39','V, ganho'],['empate','#8A6A0B','E'],['derrota','#B42B2B','D, rebaixamento'],['sul-americana','#0E7C86','zona'],['cartão amarelo','#F2B705','só o ícone'],['cartão vermelho','#D33B3B','só o ícone']].forEach(x=>chip($('#semantic'),x));
+function copy(t,el){navigator.clipboard?.writeText(t).catch(()=>{});if(el){el.classList.add('copied');setTimeout(()=>el.classList.remove('copied'),900)}}
+
+/* contrast table */
+[['Texto sobre branco','#14201A','#FFFFFF'],['Texto secundário sobre branco','#44524B','#FFFFFF'],['Legenda sobre branco','#65726B','#FFFFFF'],['Verde de ação sobre branco','#0B6B39','#FFFFFF'],['Texto branco sobre verde de ação','#FFFFFF','#0B6B39'],['Verde 800 sobre verde 50','#085530','#EDF6F0'],['Vermelho sobre branco','#B42B2B','#FFFFFF'],['Âmbar escuro sobre âmbar claro','#8A6A0B','#FBF1CF']].forEach(([n,f,b])=>{const r=ratio(f,b);$('#contrast').insertAdjacentHTML('beforeend',`<tr><td>${n}</td><td><span style="background:${b};color:${f};padding:2px 10px;border-radius:4px;border:1px solid var(--line)">Aa 123</span></td><td class="tnum">${r.toFixed(2)}:1</td><td class="${r>=4.5?'pass':''}">${r>=4.5?'Passa':'Só texto grande'}</td></tr>`)});
+
+/* tabs */
+const panels=['Campanha, próximo jogo e destaques do clube.','Últimos e próximos jogos, com placar e rodada.','Aproveitamento em casa e fora, gols por faixa de minuto e sequências.','Jogadores do elenco com jogos, gols e cartões.'];
+$$('#tabs .tab').forEach(t=>t.onclick=()=>{$$('#tabs .tab').forEach(x=>x.setAttribute('aria-selected',x===t));$('#tabpanel').textContent=panels[t.dataset.p]});
+$('#tabs').addEventListener('keydown',e=>{if(!['ArrowRight','ArrowLeft'].includes(e.key))return;const a=$$('#tabs .tab'),i=a.findIndex(x=>x.getAttribute('aria-selected')==='true'),n=a[(i+(e.key==='ArrowRight'?1:-1)+a.length)%a.length];n.click();n.focus()});
+$$('.seg').forEach(s=>s.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('button',s).forEach(x=>x.setAttribute('aria-pressed',x===b))}));
+
+/* table */
+const T=[['Palmeiras','PAL','#006437',[8,2,0,18,6],[5,3,1,15,8]],['Flamengo','FLA','#C8102E',[7,2,1,17,8],[4,4,1,12,9]],['Athletico-PR','CAP','#B3111F',[7,1,2,14,9],[4,3,2,11,10]],['Fluminense','FLU','#7A1F35',[6,3,1,13,8],[4,2,3,10,10]],['Bragantino','RBB','#C1121F',[6,2,2,14,10],[3,4,2,9,9]],['Cruzeiro','CRU','#1D4E9E',[5,3,2,12,9],[3,3,3,9,10]],['Botafogo','BOT','#222222',[5,2,3,11,10],[3,2,4,8,11]],['Corinthians','COR','#2B2B2B',[3,3,4,8,12],[2,3,4,7,12]]];
+const slugs=['palmeiras','flamengo','athletico','fluminense','bragantino','cruzeiro','botafogo','corinthians'];
+const forms=['VVVEE','VVDVV','VEVDV','EVVDV','DVEVE','VDEVD','DEDVV','DDEDE'];
+const zone=i=>i<3?'z-lib':i<5?'z-sula':i>=6?'z-rel':'';
+function render(m){
+  const rows=T.map((t,i)=>{const [w,d,l,gf,ga]=m==='all'?t[3].map((v,k)=>v+t[4][k]):m==='home'?t[3]:t[4];return{t,i,w,d,l,gf,ga,j:w+d+l,sg:gf-ga,pts:w*3+d}}).sort((a,b)=>b.pts-a.pts||b.sg-a.sg||b.gf-a.gf);
+  $('#tbody').innerHTML=rows.map((r,p)=>`<tr class="${zone(p)}"><td class="pos">${p+1}</td><td class="team"><span class="t"><img class="crest-img" src="img/teams/${slugs[r.i]}.png" alt="" loading="lazy">${r.t[0]}</span></td><td>${r.j}</td><td class="opt">${r.w}</td><td class="opt">${r.d}</td><td class="opt">${r.l}</td><td>${r.sg>0?'+':''}${r.sg}</td><td class="pts">${r.pts}</td><td><span class="form" role="img" aria-label="Últimos 5: ${forms[r.i].split('').map(c=>({V:'vitória',E:'empate',D:'derrota'}[c])).join(', ')}">${forms[r.i].split('').map(c=>`<span class="fb ${c.toLowerCase()}">${c}</span>`).join('')}</span></td></tr>`).join('')}
+render('all');
+$('#tblseg').addEventListener('click',e=>{const b=e.target.closest('button');if(b)render(b.dataset.m)});
+const mq=matchMedia('(max-width:600px)');const st=document.createElement('style');st.textContent='@media(max-width:600px){.opt{display:none}.std td:last-child,.std th:last-child{display:none}table.std{min-width:0}.std td.team span.t{min-width:0}.std td,.std th{padding:10px 6px}}';document.head.append(st);
+
+/* search */
+const names=T.map(t=>t[0]).concat(['Vasco','Grêmio','Internacional','Bahia','Santos','São Paulo']);
+const q=$('#q'),res=$('#results');
+const crestOf=n=>{const i=T.findIndex(t=>t[0]===n);return i>=0?`<img class="crest-img" src="img/teams/${slugs[i]}.png" alt="">`:`<span class="crest" style="background:var(--green-700)" aria-hidden="true">${n.slice(0,3).toUpperCase()}</span>`};
+$('#crests').innerHTML=T.map((t,i)=>`<div class="crest-cell"><img src="img/teams/${slugs[i]}.png" alt="Escudo do ${t[0]}" loading="lazy">${t[0]}</div>`).join('');
+q.oninput=()=>{const v=q.value.trim().toLowerCase();const m=v?names.filter(n=>n.toLowerCase().includes(v)).slice(0,5):[];res.hidden=!v;res.innerHTML=m.length?m.map(n=>`<li><a href="#acoes">${crestOf(n)}${n}</a></li>`).join(''):'<li style="padding:10px;color:var(--ink-2);font-size:14px">Nenhum clube encontrado.</li>'};
+addEventListener('keydown',e=>{if(e.key==='/'&&!/input|textarea/i.test(document.activeElement.tagName)){e.preventDefault();$('#acoes').scrollIntoView();q.focus()}if(e.key==='Escape'){q.value='';q.oninput()}});
+
+/* comparator */
+const metrics=[['Pontos',44,38],['Vitórias',13,10],['Gols marcados',33,28],['Gols sofridos',14,19,true],['Aproveitamento (%)',77,67],['Jogos sem sofrer gol',9,6]];
+const A='#006437',B='#C8102E';
+$('#cmp').innerHTML=`<div class="cmp-head"><div class="cmp-team"><img class="crest-img" style="width:40px;height:40px" src="img/teams/palmeiras.png" alt="">Palmeiras</div><span class="vs">contra</span><div class="cmp-team b">Flamengo<img class="crest-img" style="width:40px;height:40px" src="img/teams/flamengo.png" alt=""></div></div>`+metrics.map(([l,a,b,low])=>{const max=Math.max(a,b),lead=low?(a<b?'a':'b'):(a>b?'a':'b');return `<div class="cmp-row"><div class="cmp-lbl">${l}</div><div class="cmp-line"><span class="n a tnum">${a}</span><div class="track a"><div class="fill ${lead==='a'?'lead':'trail'}" style="--w:${a/max*100}%;background:${A}"></div></div><div class="track"><div class="fill ${lead==='b'?'lead':'trail'}" style="--w:${b/max*100}%;background:${B}"></div></div><span class="n b tnum">${b}</span></div></div>`}).join('');
+const cmp=$('#cmp'),play=()=>{cmp.classList.remove('play');void cmp.offsetWidth;requestAnimationFrame(()=>cmp.classList.add('play'))};
+$('#replay').onclick=play;
+new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){cmp.classList.add('play');o.disconnect()}}),{threshold:.3}).observe(cmp);
+
+/* bar chart */
+const bins=['0-15','16-30','31-45','46-60','61-75','76-90'],gm=[5,6,7,4,6,5],gs=[2,3,2,3,2,2];
+$('#bars').innerHTML=bins.map((b,i)=>{const x=40+i*46;return `<rect class="bar" x="${x}" y="${140-gm[i]*15}" width="16" height="${gm[i]*15}" rx="2"/><rect class="bar alt" x="${x+18}" y="${140-gs[i]*15}" width="16" height="${gs[i]*15}" rx="2"/><text x="${x-2}" y="158">${b}</text>`}).join('');
+
+/* tokens */
+const tok=`@theme {
+  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+
+  --color-green-50: #EDF6F0;  --color-green-100: #D3EADB; --color-green-200: #A9D5B9;
+  --color-green-500: #1F9A55; --color-green-600: #0F8046; --color-green-700: #0B6B39;
+  --color-green-800: #085530; --color-green-900: #063D22;
+
+  --color-ink: #14201A;   --color-ink-2: #44524B; --color-muted: #65726B;
+  --color-line: #E1E7E3;  --color-line-strong: #C9D2CD; --color-surface: #F5F8F6;
+
+  --color-draw: #8A6A0B;  --color-draw-bg: #FBF1CF;
+  --color-loss: #B42B2B;  --color-loss-bg: #FBE4E4;
+  --color-sula: #0E7C86;  --color-sula-bg: #DDF1F3;
+
+  --radius-sm: 6px; --radius-md: 10px;
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+}`;
+$('#tokcode').textContent=tok;
+$('#copytok').onclick=()=>{navigator.clipboard?.writeText(tok).then(()=>$('#copystate').textContent='Tokens copiados.').catch(()=>$('#copystate').textContent='Não foi possível copiar.')};
+
+/* side nav highlight */
+const links=$$('#nav a');
+const spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-30% 0px -60% 0px'});
+$$('section').forEach(s=>spy.observe(s));
+</script>
+</body>
+</html>
