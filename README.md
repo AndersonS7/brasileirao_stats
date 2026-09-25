@@ -2,7 +2,7 @@
 
 Site estático de estatísticas de uma temporada da Série A do Campeonato Brasileiro: classificação, páginas de clube, jogos por rodada, rankings de jogadores e comparador de clubes.
 
-Projeto de demonstração, sem fins comerciais, criado por **cardeiro-studio** para mostrar o que a IA consegue construir sob direção e julgamento humanos.
+Projeto de demonstração, sem fins comerciais, criado por **AndersonS7** para mostrar o que a IA consegue construir sob direção e julgamento humanos.
 
 ![Classificação em 1440px](docs/screenshots/league-1440.png)
 
@@ -129,4 +129,4 @@ Construído com **Claude Code** (modelos Claude) sob direção humana.
 
 ## Licença
 
-MIT. Copyright (c) 2026 cardeiro-studio. Veja [LICENSE](LICENSE).
+MIT. Copyright (c) 2026 AndersonS7. Veja [LICENSE](LICENSE).
